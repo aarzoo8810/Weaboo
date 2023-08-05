@@ -5,32 +5,45 @@ from django.shortcuts import render
 
 from django.shortcuts import render
 import requests
+from django.http import HttpResponse
 
 
 # Create your views here.
+def index(request):
+    # get list of current anime
+    season_list = get_season(limit=10)
+    return HttpResponse(season_list)
 
 
+def anime_info(request, mal_anime_id):
+    pass
 
 
-# def get_season(year: int = None, season: str = None, filter: str = None, sfw: bool = False, limit: str = None, page: int = 1):
+def manga_info(request, mal_manga_id):
+    pass
 
-#     endpoint = "https://api.jikan.moe/v4/seasons/"
-#     if year and season:
-#         endpoint += f"{year}/{season}"
-#     else:
-#         endpoint += "now"
-         
-#     if sfw:
-#         endpoint += "?sfw"
-#     params = {
-#         "filter": filter,
-#         "limit": limit,
-#         "page": page,
-#     }
-#     response = requests.get(endpoint, params=params)
-#     print(response.url)
-#     print(response.status_code)
-#     response_json = response.json()
+
+def get_season(year: int = None, season: str = None, filter: str = None, sfw: bool = False, limit: str = None, page: int = 1) -> dict:
+    """This function return a list of shows categorized as season in json.To get current season don't pass year and season parameter. Example get_season(
+    year=2015, season = 'fall', filter='movie', sfw=False, page=1, limit=10), 
+    get_season(
+    year=2015, season = 'summer', filter='ova', sfw=False, page=5, limit=20)"""
+    endpoint = "https://api.jikan.moe/v4/seasons/"
+    if year and season:
+        endpoint += f"{year}/{season}"
+    else:
+        endpoint += "now"
+
+    if sfw:
+        endpoint += "?sfw"
+    params = {
+        "filter": filter,
+        "limit": limit,
+        "page": page,
+    }
+    response = requests.get(endpoint, params=params)
+    response_json = response.json()["data"]
+    return response_json
 
 
 # get_season(year=2023, season="summer", limit=5)
