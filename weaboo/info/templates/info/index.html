@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Weaboo{% endblock  %}
+
+{% block stylesheet %}<link rel="stylesheet" href="{% static 'info/info.css' %}"{% endblock  %}>
+
+{% block content %}
+<div class="row">
+  <div class="col-xl-9">
+      <section id="left">
+          <div id="carouselExampleIndicators" class="carousel slide" data-bs-touch="true">
+            {% comment %} <div class="carousel-indicators">
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div> {% endcomment %}
+            <div class="carousel-inner">
+              <div class="carousel-item active" style="background-image: url('{{first_show.images.webp.large_image_url}}'); background-repeat: no-repeat;  background-size: 100%">
+                <div class="carousel-info ">
+                    <h3 class="carousel-title">{{first_show.title}}</h3>
+                    <p class="truncate-overflow carousel-text">{{first_show.synopsis}}
+                    <div class="extra-info">
+                        <span class="extra-info-box carousel-text">{{first_show.type}}</span>
+                        <span class="extra-info-box carousel-text">{{first_show.episodes}}</span>
+                        <span class="extra-info-box carousel-text">{{first_show.duration}}</span>
+                    </div>
+                    <a type="button" class="btn btn-outline-primary detail-button">Details</a>
+                </div>
+              </div>
+            
+              {% for show in shows %}
+                <div class="carousel-item" style="background-image: url('{{show.images.webp.large_image_url}}'); background-repeat: no-repeat;  background-size: 100%">
+                  <div class="carousel-info">
+                      <h3 class="carousel-title">{{show.title}}</h3>
+                      <p class="truncate-overflow carousel-text">{{show.synopsis}}
+                    <div class="extra-info">
+                        <span class="extra-info-box carousel-text">{{show.type}}</span>
+                        <span class="extra-info-box carousel-text">{{show.episodes}}</span>
+                        <span class="extra-info-box carousel-text">{{show.duration}}</span>
+                    </div>
+                    <a type="button" class="btn btn-outline-primary detail-button">Details</a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+          <div class='popular-now'>
+            <span class="popular-now-header"><span>Popular Now</span> <a href="#">More...</a></span>
+            <div class="popular-now-body">
+              <div class="row">
+                {% for show in popular_shows %}
+                  <div class="col-xxl-2 col-xl-3 col-md-3 col-sm-4 col-6 show-card">
+                    <a href="#" class="show-item">
+                      <img src="{{show.images.webp.image_url}}" alt="" class="show-img">
+                      <p>{{show.title}}</p>
+                    </a>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+      </section>
+  </div>
+  <div class="col-xl-3">
+    <section id="right">
+      <div class='top-manga'>
+        <p class='top-manga-header'>Popular Manga<a href="#" class="">More...</a></p>
+        <div class="row">
+        {% for manga in popular_manga %}
+          <div class="col-xl-6 col-lg-3 col-md-3 col-sm-4 col-6">
+              <a href="#" class='top-manga-item'>
+                <img src="{{manga.images.webp.image_url}}" alt="{{manga.title}}" class="manga-img">
+                <p>{{manga.title}}</p>
+              </a>
+          </div>
+          {% endfor %}
+          </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock  %}

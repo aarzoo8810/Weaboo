@@ -1,0 +1,15 @@
+nav, 
+.dropdown-menu, 
+.dropdown-item{
+    background-color: #8062D6;
+    color: #FFD2D7;
+}
+
+.navbar-nav .nav-item .nav-link{
+    color: #FFD2D7;
+}
+
+nav {
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
