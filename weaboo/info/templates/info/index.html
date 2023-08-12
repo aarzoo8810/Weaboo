@@ -59,7 +59,7 @@
               <div class="row">
                 {% for show in popular_shows %}
                   <div class="col-xxl-2 col-xl-3 col-md-3 col-sm-4 col-6 show-card">
-                    <a href="#" class="show-item">
+                    <a href="{% url 'anime-info' %}" class="show-item">
                       <img src="{{show.images.webp.image_url}}" alt="" class="show-img">
                       <p>{{show.title}}</p>
                     </a>
