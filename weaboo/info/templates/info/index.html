@@ -6,7 +6,7 @@
 {% block stylesheet %}<link rel="stylesheet" href="{% static 'info/info.css' %}"{% endblock  %}>
 
 {% block content %}
-<div class="row">
+<div class="row content">
   <div class="col-xl-9">
       <section id="left">
           <div id="carouselExampleIndicators" class="carousel slide" data-bs-touch="true">
@@ -18,28 +18,39 @@
             <div class="carousel-inner">
               <div class="carousel-item active" style="background-image: url('{{first_show.images.webp.large_image_url}}'); background-repeat: no-repeat;  background-size: 100%">
                 <div class="carousel-info ">
-                    <h3 class="carousel-title">{{first_show.title}}</h3>
+                    <h3 class="carousel-title">
+                      {% if first_show.title_english %}
+                        {{first_show.title_english}}
+                      {% else %}
+                        {{first_show.title}}
+                      {% endif %}
+                    </h3>
                     <p class="truncate-overflow carousel-text">{{first_show.synopsis}}
                     <div class="extra-info">
                         <span class="extra-info-box carousel-text">{{first_show.type}}</span>
-                        <span class="extra-info-box carousel-text">{{first_show.episodes}}</span>
+                        <span class="extra-info-box carousel-text">{{first_show.episodes}} Episodes</span>
                         <span class="extra-info-box carousel-text">{{first_show.duration}}</span>
                     </div>
-                    <a type="button" class="btn btn-outline-primary detail-button">Details</a>
+                    <a href="{% url 'anime-details' first_show.mal_id %}" type="button" class="btn btn-outline-primary detail-button">Details</a>
                 </div>
               </div>
             
               {% for show in shows %}
                 <div class="carousel-item" style="background-image: url('{{show.images.webp.large_image_url}}'); background-repeat: no-repeat;  background-size: 100%">
                   <div class="carousel-info">
-                      <h3 class="carousel-title">{{show.title}}</h3>
+                      <h3 class="carousel-title">
+                        {% if show.title_english %}
+                          {{show.title_english}}
+                        {% else %}
+                          {{show.title}}
+                        {% endif %}</h3>
                       <p class="truncate-overflow carousel-text">{{show.synopsis}}
                     <div class="extra-info">
                         <span class="extra-info-box carousel-text">{{show.type}}</span>
-                        <span class="extra-info-box carousel-text">{{show.episodes}}</span>
+                        <span class="extra-info-box carousel-text">{{show.episodes}} Episodes</span>
                         <span class="extra-info-box carousel-text">{{show.duration}}</span>
                     </div>
-                    <a type="button" class="btn btn-outline-primary detail-button">Details</a>
+                    <a href="{% url 'anime-details' show.mal_id %}" type="button" class="btn btn-outline-primary detail-button">Details</a>
                   </div>
                 </div>
               {% endfor %}
@@ -55,13 +66,18 @@
           </div>
           <div class='popular-now'>
             <span class="popular-now-header"><span>Popular Now</span> <a href="#">More...</a></span>
+            <hr>
             <div class="popular-now-body">
               <div class="row">
                 {% for show in popular_shows %}
                   <div class="col-xxl-2 col-xl-3 col-md-3 col-sm-4 col-6 show-card">
-                    <a href="{% url 'anime-info' %}" class="show-item">
-                      <img src="{{show.images.webp.image_url}}" alt="" class="show-img">
-                      <p>{{show.title}}</p>
+                    <a href="{% url 'anime-details' show.mal_id %}" class="show-item">
+                      <img src="{{show.images.webp.image_url}}" alt="" class="show-img img-fluid">
+                      {% if show.title_english %}
+                        <p>{{show.title_english}}</p>
+                      {% else %}
+                        <p>{{show.title}}</p>
+                      {% endif %}
                     </a>
                   </div>
                 {% endfor %}
@@ -70,15 +86,16 @@
           </div>
       </section>
   </div>
-  <div class="col-xl-3">
+  <div class="col-xl-3 right-box">
     <section id="right">
       <div class='top-manga'>
         <p class='top-manga-header'>Popular Manga<a href="#" class="">More...</a></p>
+        <hr>
         <div class="row">
         {% for manga in popular_manga %}
           <div class="col-xl-6 col-lg-3 col-md-3 col-sm-4 col-6">
-              <a href="#" class='top-manga-item'>
-                <img src="{{manga.images.webp.image_url}}" alt="{{manga.title}}" class="manga-img">
+              <a href="{% url 'manga-details' manga.mal_id %}" class='top-manga-item'>
+                <img src="{{manga.images.jpg.image_url}}" alt="{{manga.title}}" class="manga-img img-fluid">
                 <p>{{manga.title}}</p>
               </a>
           </div>

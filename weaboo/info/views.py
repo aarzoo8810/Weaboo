@@ -22,11 +22,25 @@ def index(request):
 
 def anime_info(request, mal_anime_id):
     """Get anime info by mal_id"""
-    
+    endpoint = f"https://api.jikan.moe/v4/anime/{mal_anime_id}/full"
+    response = requests.get(endpoint)
+    response_json = response.json()["data"]
+
+    return render(request, 'info/anime-details.html', {
+        "show": response_json,
+    })
 
 
 def manga_info(request, mal_manga_id):
-    pass
+    """Get anime info by mal_id"""
+    endpoint = f"https://api.jikan.moe/v4/manga/{mal_manga_id}/full"
+    response = requests.get(endpoint)
+    response_json = response.json()["data"]
+
+    return render(request, 'info/anime-details.html', {
+        "show": response_json,
+        "type": "manga"
+    })
 
 
 def get_season(year: int = None, season: str = None, filter: str = None, sfw: bool = False, limit: str = None, page: int = 1) -> dict:
