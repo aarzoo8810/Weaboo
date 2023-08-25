@@ -11,10 +11,10 @@
     {% block stylesheet %}
     {% endblock  %}
   </head>
-  <body>
+  <body> 
     <nav class="navbar sticky-top navbar-expand-lg">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">WEABOO</a>
+          <a class="navbar-brand" href="{% url 'index' %}">WEABOO</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -28,23 +28,39 @@
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Dropdown
+                  Anime
                 </a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                  <li><a class="dropdown-item" href="#">Top</a></li>
+                  <li><a class="dropdown-item" href="#">Popular</a></li>
+                  {% comment %} <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li> {% endcomment %}
                 </ul>
               </li>
-              {% comment %} <li class="nav-item">
-                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-              </li> {% endcomment %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Manga
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Top</a></li>
+                  <li><a class="dropdown-item" href="#">Popular</a></li>
+                  {% comment %} <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li> {% endcomment %}
+                </ul>
+              </li>
             </ul>
-            <form class="d-flex" role="search">
+
+            <form class="d-flex search-form" role="search">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-dark" type="submit">Search</button>
             </form>
+
+            <div class="account-btn-li">
+              <a href="#" class="btn btn-outline-dark account-btn">Sign Up</a>
+            </div>
+            <div class="account-btn-li">
+              <a href="#" class="btn btn-outline-dark account-btn">Log In</a>
+            </div>
           </div>
         </div>
       </nav>

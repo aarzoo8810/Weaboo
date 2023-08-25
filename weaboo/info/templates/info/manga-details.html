@@ -3,7 +3,8 @@
 
 {% block title %}{{show.title}}{% endblock  %}
 
-{% block stylesheet %}<link rel="stylesheet" href="{% static 'info/info.css' %}">{% endblock  %} 
+{% block stylesheet %}<link rel="stylesheet" href="{% static 'info/info.css' %}">{% endblock  %}
+
 {% block content %}
 
 {% comment %} <div class="container text-center">
@@ -27,26 +28,11 @@
 </div> {% endcomment %}
 
 <div class="container">
-  {% if show.title_english %}
-    <h1 class="title">{{show.title_english}}</h1>
-  {% else %}
   <h1 class="title">{{show.title}}</h1>
-  {% endif %}
-
   <div class="row">
     <div class="col-lg-3 col-md-4 show-info-left">
       <div class="img-div">
         <img src="{{show.images.webp.large_image_url}}" class="img-fluid header-img">
-      </div>
-      <div class="sidebar-btn">
-        <div class="row">
-          <div class='acc-add-btn'>
-            <a class='btn'>Add</a>
-          </div>
-          <div class='acc-add-btn'>
-            <a class='btn'>Update</a>
-          </div>
-        </div>
       </div>
         {% comment %} <div class="dropdown">
         <button class="btn shelf-btn dropdown-toggle manage-btn" type="button" data-bs-toggle="dropdown"
@@ -72,26 +58,11 @@
         <p>Overview</p>
         <hr>
         <ul class="sidebar-list list">
-          {% if type == "manga" %}
-            <li>Type: {{show.type}}</li>
-            <li>Chapters: {{show.chapters}}</li>
-            <li>Volumes: {{show.volumes}}</li>
-            <li>Status: {{show.status}}</li>
-            <li>Score: {{show.score}}</li>
-            <li>Rank: {{show.rank|capfirst}}</li>
-            <li>Popularity: {{show.popularity}}</li>
-            <li>Authors: {% for author in show.authors %}{{author.name}}{% if show.authors|length > 1 %}<span class="comma">,<span> {% endif %}{% endfor %}
-          {% else %}
-            <li>Type: {{show.type}}</li>
-            <li>Episodes: {{show.episodes}}</li>
-            <li>Duration: {{show.duration}}</li>
-            <li> Status: {{show.status}}</li>
-            <li>Score: {{show.score}}</li>
-            <li>Rank: {{show.rank}}</li>
-            <li>Popularity: {{show.popularity}}</li>
-            <li>Source: {{show.source|capfirst}}</li>
-          {% endif %}
-          
+          <li>Type: {{show.type}}</li>
+          <li>Chapters: {{show.chapters}}</li>
+          <li>Volumes: {{show.volumes}}</li>
+          <li> Status: {{show.status}}</li>
+          <li>Source: {{show.source|capfirst}}</li>
         </ul>
       </div>
     
@@ -109,34 +80,7 @@
         <hr>
         <ul class="list">
           {% for related_item in show.relations %}
-            {% if type == "manga" %}
-              <li>{{related_item.relation|capfirst}}: 
-                {% for item in related_item.entry %}
-                  {% if related_item.relation == 'Adaptation' %}
-                    <a href="{% url 'anime-details' item.mal_id %}">{{item.name}}</a>
-                  {% else %}
-                    <a href="{% url 'manga-details' item.mal_id%}">{{item.name}}</a>
-                  {% endif %}
-                  
-                  {% if related_item.entry|length > 1 %}<span class="comma">, <span> {% endif %}
-                  
-                {% endfor %}
-              </li>
-
-            {% else %}
-              <li>{{related_item.relation|capfirst}}: 
-                {% for item in related_item.entry %}
-                  {% if related_item.relation == 'Adaptation' %}
-                    <a href="{% url 'manga-details' item.mal_id %}">{{item.name}}</a>
-                  {% else %}
-                    <a href="{% url 'anime-details' item.mal_id%}">{{item.name}}</a>
-                  {% endif %}
-                  
-                  {% if related_item.entry|length > 1 %}<span class="comma">, <span> {% endif %}
-                  
-                {% endfor %}
-              </li>
-            {% endif %}
+            <li>{{related_item.relation|capfirst}}: {% for item in related_item.entry %}{% if related_item.relation == 'Adaptation' %}<a href="#">{{item.name}}</a>{% else %}<a href="{% url 'anime-details' item.mal_id%}">{{item.name}}, </a>{% endif %}{% endfor %}</li>
           {% endfor %}
         </ul>
       </div>
