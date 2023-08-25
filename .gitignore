@@ -6,6 +6,9 @@
 *.pot
 *.pyc
 __pycache__/
+weaboo/weaboo/__pycache__/
+weaboo/weaboo/__pycache__/
+weaboo/weaboo/__pycache__/settings.cpython-310.pyc
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -264,3 +267,4 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/django,python
+weaboo/weaboo/__pycache__/settings.cpython-310.pyc
