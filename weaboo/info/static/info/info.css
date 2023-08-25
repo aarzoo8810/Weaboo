@@ -325,7 +325,8 @@ body {
 .description, 
 .related,
 iframe,
-.recommendations {
+.recommendations,
+.reviews {
     padding: 1.5rem;
     margin-bottom: 1.5rem;
     border-radius: 15px;
