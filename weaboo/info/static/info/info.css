@@ -323,12 +323,13 @@ body {
 
 
 .description, 
-.related {
+.related,
+iframe,
+.recommendations {
     padding: 1.5rem;
     margin-bottom: 1.5rem;
     border-radius: 15px;
     box-shadow: 0 2px 8px rgba(255, 210, 215, 0.5);
-    /* box-shadow: 5px 5px 5px 5px rgba(96, 73, 160, 0.5); */
 }
 
 .related a {

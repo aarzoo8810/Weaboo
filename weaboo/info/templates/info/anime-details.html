@@ -48,25 +48,6 @@
           </div>
         </div>
       </div>
-        {% comment %} <div class="dropdown">
-        <button class="btn shelf-btn dropdown-toggle manage-btn" type="button" data-bs-toggle="dropdown"
-          aria-expanded="false">
-          {% if user_shelf %}
-          {{user_shelf}}
-          {% else %}
-          Add Book To
-          {% endif %}
-        </button>
-        <ul class="dropdown-menu manage-btn">
-          {% for shelf in shelves %}
-          <li><a class="dropdown-item"
-              href="{{url_for('add_to_shelf', book_id=book.book_id, book_title=book.title, shelf_id=shelf.shelf_id, user_list=False)}}">{{shelf.shelf_name.title()}}</a>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
-      <a href="{{url_for('update_book', book_id=book.book_id)}}"
-        class="btn btn-warning manage-btn">Update</a> {% endcomment %}
       
       <div class="sidebar-overview"> 
         <p>Overview</p>
@@ -104,6 +85,10 @@
         <p>{{show.synopsis}}</p>
       </div>
 
+      {% if show.trailer %}
+        <iframe width="100%" height="315" src="{{show.trailer.embed_url}}" frameborder="0" allowfullscreen></iframe>
+      {% endif %}
+
       <div class="related">
         <h3>Related</h3>
         <hr>
@@ -140,6 +125,36 @@
           {% endfor %}
         </ul>
       </div>
+
+
+      {% if recommendations %}
+        <div class='recommendations'>
+          <span class="popular-now-header"><span>Recommendation</span></span>
+          <hr>
+          <div class="popular-now-body">
+            <div class="row">
+              {% for show in recommendations %}
+                <div class="col-xxl-2 col-xl-3 col-md-3 col-sm-4 col-6 show-card">
+                  {% if type == "manga" %}
+                  <a href="{% url 'manga-details' show.entry.mal_id %}" class="show-item">
+                  {% else %}
+                  <a href="{% url 'anime-details' show.entry.mal_id %}" class="show-item">
+                  {% endif %}
+                    <img src="{{show.entry.images.webp.image_url}}" alt="" class="show-img img-fluid">
+                    {% if show.entry.title_english %}
+                      <p>{{show.entry.title_english}}</p>
+                    {% else %}
+                      <p>{{show.entry.title}}</p>
+                    {% endif %}
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+
       {% comment %} <hr>
       <h3>Comments</h3>
       {% if not logged_in %}

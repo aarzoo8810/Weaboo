@@ -25,10 +25,17 @@ def anime_info(request, mal_anime_id):
     endpoint = f"https://api.jikan.moe/v4/anime/{mal_anime_id}/full"
     response = requests.get(endpoint)
     response_json = response.json()["data"]
+    recommendations = get_anime_recommendation(mal_anime_id)
 
-    return render(request, 'info/anime-details.html', {
-        "show": response_json,
-    })
+    if len(recommendations) > 0:
+        return render(request, 'info/anime-details.html', {
+            "show": response_json,
+            "recommendations": recommendations[:6],
+        })
+    else:
+        return render(request, 'info/anime-details.html', {
+            "show": response_json
+        })
 
 
 def manga_info(request, mal_manga_id):
@@ -36,11 +43,27 @@ def manga_info(request, mal_manga_id):
     endpoint = f"https://api.jikan.moe/v4/manga/{mal_manga_id}/full"
     response = requests.get(endpoint)
     response_json = response.json()["data"]
+    recommendations = get_manga_recommendation(mal_manga_id)
 
-    return render(request, 'info/anime-details.html', {
-        "show": response_json,
-        "type": "manga"
-    })
+    if len(recommendations) > 0:
+        return render(request, 'info/anime-details.html', {
+            "show": response_json,
+            "type": "manga",
+            "recommendations": recommendations[:6]
+        })
+    else:
+        return render(request, 'info/anime-details.html', {
+            "show": response_json,
+            "type": "manga"
+        })
+
+def get_manga_recommendation(mal_manga_id):
+    endpoint = f"https://api.jikan.moe/v4/manga/{mal_manga_id}/recommendations"
+    response = requests.get(endpoint)
+    response_json = response.json()["data"]
+
+    return response_json
+
 
 
 def get_season(year: int = None, season: str = None, filter: str = None, sfw: bool = False, limit: str = None, page: int = 1) -> dict:
@@ -97,3 +120,11 @@ def get_top_manga(type: str = "manga", filter: str = "bypopularity", page: int =
 
 
 # get_season(year=2023, season="summer", limit=5)
+
+
+def get_anime_recommendation(mal_anime_id):
+    endpoint = f"https://api.jikan.moe/v4/anime/{mal_anime_id}/recommendations"
+    response = requests.get(endpoint)
+    response_json = response.json()["data"]
+
+    return response_json
