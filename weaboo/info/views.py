@@ -20,42 +20,64 @@ def index(request):
                                                })
 
 
-def anime_info(request, mal_anime_id):
-    """Get anime info by mal_id"""
-    endpoint = f"https://api.jikan.moe/v4/anime/{mal_anime_id}/full"
-    response = requests.get(endpoint)
-    response_json = response.json()["data"]
-    recommendations = get_anime_recommendation(mal_anime_id)
+def anime_detail_view(request, mal_anime_id):
 
+    anime = get_anime_details(mal_anime_id)
+    recommendations = get_anime_recommendation(mal_anime_id)
     if len(recommendations) > 0:
         return render(request, 'info/anime-details.html', {
-            "show": response_json,
+            "show": anime,
             "recommendations": recommendations[:6],
         })
     else:
         return render(request, 'info/anime-details.html', {
-            "show": response_json
+            "show": anime
         })
 
 
-def manga_info(request, mal_manga_id):
-    """Get anime info by mal_id"""
-    endpoint = f"https://api.jikan.moe/v4/manga/{mal_manga_id}/full"
-    response = requests.get(endpoint)
-    response_json = response.json()["data"]
+def manga_details_view(request, mal_manga_id):
+
+    manga = get_manga_details(mal_manga_id)
     recommendations = get_manga_recommendation(mal_manga_id)
 
     if len(recommendations) > 0:
         return render(request, 'info/anime-details.html', {
-            "show": response_json,
+            "show": manga,
             "type": "manga",
             "recommendations": recommendations[:6]
         })
     else:
         return render(request, 'info/anime-details.html', {
-            "show": response_json,
+            "show": manga,
             "type": "manga"
         })
+
+
+def get_anime_details(mal_anime_id):
+    """Get anime info by mal_id else return status code"""
+    endpoint = f"https://api.jikan.moe/v4/anime/{mal_anime_id}/full"
+    response = requests.get(endpoint)
+
+    try:
+        response_json = response.json()["data"]
+    except TypeError:
+        return response.status_code
+    else:
+        return response_json
+
+
+def get_manga_details(mal_manga_id):
+    """Get anime info by mal_id else return status code"""
+    endpoint = f"https://api.jikan.moe/v4/manga/{mal_manga_id}/full"
+    response = requests.get(endpoint)
+
+    try:
+        response_json = response.json()["data"]
+    except TypeError:
+        return response.status_code
+    else:
+        return response_json
+
 
 def get_manga_recommendation(mal_manga_id):
     endpoint = f"https://api.jikan.moe/v4/manga/{mal_manga_id}/recommendations"
@@ -63,7 +85,6 @@ def get_manga_recommendation(mal_manga_id):
     response_json = response.json()["data"]
 
     return response_json
-
 
 
 def get_season(year: int = None, season: str = None, filter: str = None, sfw: bool = False, limit: str = None, page: int = 1) -> dict:
