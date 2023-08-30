@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.shortcuts import render
 import requests
 from django.http import HttpResponse
+from .forms import BrowseAnimeForm
 
 
 # Create your views here.
@@ -53,6 +54,29 @@ def manga_details_view(request, mal_manga_id):
         })
 
 
+def browse_anime_view(request):
+
+    if request.GET:
+        form = BrowseAnimeForm(request.GET)
+        request.GET = request.GET.copy()
+        for key in request.GET.keys():
+            if not request.GET[key]:
+                request.GET[key] = None
+        # request.GET["limit"] = int(request.GET["limit"])
+        # print(type(request.GET["limit"]))
+        # limit = int(request.GET.pop("limit")[0])
+        # print(type(limit))
+        result = browse_anime(**request.GET)
+        print(len(result))
+        return render(request, "info/browse_anime.html", {
+            "shows": result,
+            "form": form
+        })
+    form = BrowseAnimeForm()
+    return render(request, "info/browse_anime.html", {
+        "form": form
+    })
+
 def get_anime_details(mal_anime_id):
     """Get anime info by mal_id else return status code"""
     endpoint = f"https://api.jikan.moe/v4/anime/{mal_anime_id}/full"
@@ -77,6 +101,7 @@ def get_manga_details(mal_manga_id):
         return response.status_code
     else:
         return response_json
+
 
 
 def get_manga_recommendation(mal_manga_id):
@@ -106,6 +131,7 @@ def get_season(year: int = None, season: str = None, filter: str = None, sfw: bo
         "page": page,
     }
     response = requests.get(endpoint, params=params)
+    print(response.url)
     response_json = response.json()["data"]
     return response_json
 
@@ -149,3 +175,50 @@ def get_anime_recommendation(mal_anime_id):
     response_json = response.json()["data"]
 
     return response_json
+
+
+def browse_anime(sfw: bool = False,
+                page: int = 1,
+                limit: int=None,
+                q:str=None,
+                type:str=None,
+                score:float=None,
+                min_score:float=None,
+                max_score:float=None,
+                status:str=None,
+                rating:str=None,
+                genres:str=None,
+                genres_exclude:str=None,
+                order_by:str=None,
+                sort:str=None,
+                start_date:str=None,
+                end_date:str=None):
+    """This Function returns a list of anime based on received parameters"""
+    endpoint = "https://api.jikan.moe/v4/anime"
+
+    if sfw:
+        endpoint += "?sfw"
+
+    params = {
+        "page": page,
+        "limit": limit,
+        "q": q,
+        "type": type,
+        "score": score,
+        "min_score": min_score,
+        "max_score": max_score,
+        "status": status,
+        "rating": rating,
+        "genres": genres,
+        "genres_exclude": genres_exclude,
+        "order_by": order_by,
+        "sort": sort,
+        "start_date": start_date,
+        "end_date": end_date,
+    }
+    response = requests.get(endpoint, params=params)
+    print(response.url)
+    print(response)
+    
+    return response.json()["data"]
+
