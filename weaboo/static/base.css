@@ -1,3 +1,7 @@
+#body {
+    max-width: 1920px;
+}
+
 nav, 
 .dropdown-menu, 
 .dropdown-item{
