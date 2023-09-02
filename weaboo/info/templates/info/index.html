@@ -64,8 +64,30 @@
               <span class="visually-hidden">Next</span>
             </button>
           </div>
+
           <div class='popular-now'>
-            <span class="popular-now-header"><span>Popular Now</span> <a href="{% url 'current-seasonal-anime' %}">More...</a></span>
+            <span class="popular-now-header"><span>Airing This Season</span> <a href="{% url 'current-seasonal-anime' %}">More...</a></span>
+            <hr>
+            <div class="popular-now-body">
+              <div class="row">
+                {% for show in seasonal_popular_shows %}
+                  <div class="col-xxl-2 col-xl-3 col-md-3 col-sm-4 col-6 show-card">
+                    <a href="{% url 'anime-details' show.mal_id %}" class="show-item">
+                      <img src="{{show.images.webp.image_url}}" alt="" class="show-img img-fluid">
+                      {% if show.title_english %}
+                        <p>{{show.title_english}}</p>
+                      {% else %}
+                        <p>{{show.title}}</p>
+                      {% endif %}
+                    </a>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <div class='popular-now'>
+            <span class="popular-now-header"><span>Most Popular Anime</span> <a href="{% url 'popular' %}">More...</a></span>
             <hr>
             <div class="popular-now-body">
               <div class="row">

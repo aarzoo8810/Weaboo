@@ -13,12 +13,21 @@ from .forms import BrowseAnimeForm
 def index(request):
     # get list of current anime
     season_list = get_season(limit=11)["data"]
+    popular_shows = browse_anime(order_by="popularity", min_score=0.1)["data"]
     popular_manga_list = get_top_manga(limit=10)
     return render(request, "info/index.html", {"first_show": season_list[0],
                                                "shows": season_list[1:5],
-                                               "popular_shows": season_list[5:],
+                                               "seasonal_popular_shows": season_list[5:],
+                                               "popular_shows": popular_shows[:6],
                                                "popular_manga": popular_manga_list,
                                                })
+
+
+def popular_shows_view(request):
+    popular_shows = browse_anime(order_by="popularity", min_score=0.1)["data"]
+    return render(request, "info/browse_anime.html", {
+        "shows": popular_shows,
+    })
 
 
 def anime_detail_view(request, mal_anime_id):
@@ -253,7 +262,5 @@ def browse_anime(sfw: bool = False,
         "end_date": end_date,
     }
     response = requests.get(endpoint, params=params)
-    print(response.url)
-    print(response)
 
-    return response.json()["data"]
+    return response.json()
