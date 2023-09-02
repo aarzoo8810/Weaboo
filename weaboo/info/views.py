@@ -12,7 +12,7 @@ from .forms import BrowseAnimeForm
 # Create your views here.
 def index(request):
     # get list of current anime
-    season_list = get_season(limit=11)
+    season_list = get_season(limit=11)["data"]
     popular_manga_list = get_top_manga(limit=10)
     return render(request, "info/index.html", {"first_show": season_list[0],
                                                "shows": season_list[1:5],
@@ -34,6 +34,42 @@ def anime_detail_view(request, mal_anime_id):
         return render(request, 'info/anime-details.html', {
             "show": anime
         })
+
+
+def current_seasonal_anime(request):
+
+    endpoint = "https://api.jikan.moe/v4/seasons"
+    response = requests.get(endpoint).json()["data"]
+
+    season_list_dict = get_season(filter="tv")
+    season_list_item = season_list_dict["data"]
+    season_list_page_count = season_list_dict["pagination"]["last_visible_page"]
+
+    for page_num in range(2, season_list_page_count+1):
+        print(page_num)
+        season_list_item += get_season(page=page_num, filter="tv")["data"]
+
+    return render(request, "info/browse_anime.html", {
+        "shows": season_list_item,
+        "seasons": response
+    })
+
+
+def seasonal_anime(request, year, season):
+    endpoint = "https://api.jikan.moe/v4/seasons"
+    response = requests.get(endpoint).json()["data"]
+
+    season_list_dict = get_season(filter="tv", year=year, season=season)
+    season_list_item = season_list_dict["data"]
+    season_list_page_count = season_list_dict["pagination"]["last_visible_page"]
+
+    for page_num in range(2, season_list_page_count+1):
+        season_list_item += get_season(page=page_num, filter="tv")["data"]
+
+    return render(request, "info/browse_anime.html", {
+        "shows": season_list_item,
+        "seasons": response
+    })
 
 
 def manga_details_view(request, mal_manga_id):
@@ -77,6 +113,7 @@ def browse_anime_view(request):
         "form": form
     })
 
+
 def get_anime_details(mal_anime_id):
     """Get anime info by mal_id else return status code"""
     endpoint = f"https://api.jikan.moe/v4/anime/{mal_anime_id}/full"
@@ -103,7 +140,6 @@ def get_manga_details(mal_manga_id):
         return response_json
 
 
-
 def get_manga_recommendation(mal_manga_id):
     endpoint = f"https://api.jikan.moe/v4/manga/{mal_manga_id}/recommendations"
     response = requests.get(endpoint)
@@ -112,11 +148,12 @@ def get_manga_recommendation(mal_manga_id):
     return response_json
 
 
-def get_season(year: int = None, season: str = None, filter: str = None, sfw: bool = False, limit: str = None, page: int = 1) -> dict:
+def get_season(year: int = None, season: str = None, filter: str = None, sfw: bool = True, limit: str = None, page: int = 1) -> dict:
     """This function return a list of shows categorized as season in json.To get current season don't pass year and season parameter. Example 
     get_season(year=2015, season = 'fall', filter='movie', sfw=False, page=1, limit=10),
 
     get_season(year=2015, season = 'summer', filter='ova', sfw=False, page=5, limit=20)"""
+
     endpoint = "https://api.jikan.moe/v4/seasons/"
     if year and season:
         endpoint += f"{year}/{season}"
@@ -131,8 +168,7 @@ def get_season(year: int = None, season: str = None, filter: str = None, sfw: bo
         "page": page,
     }
     response = requests.get(endpoint, params=params)
-    print(response.url)
-    response_json = response.json()["data"]
+    response_json = response.json()
     return response_json
 
 
@@ -178,21 +214,21 @@ def get_anime_recommendation(mal_anime_id):
 
 
 def browse_anime(sfw: bool = False,
-                page: int = 1,
-                limit: int=None,
-                q:str=None,
-                type:str=None,
-                score:float=None,
-                min_score:float=None,
-                max_score:float=None,
-                status:str=None,
-                rating:str=None,
-                genres:str=None,
-                genres_exclude:str=None,
-                order_by:str=None,
-                sort:str=None,
-                start_date:str=None,
-                end_date:str=None):
+                 page: int = 1,
+                 limit: int = None,
+                 q: str = None,
+                 type: str = None,
+                 score: float = None,
+                 min_score: float = None,
+                 max_score: float = None,
+                 status: str = None,
+                 rating: str = None,
+                 genres: str = None,
+                 genres_exclude: str = None,
+                 order_by: str = None,
+                 sort: str = None,
+                 start_date: str = None,
+                 end_date: str = None):
     """This Function returns a list of anime based on received parameters"""
     endpoint = "https://api.jikan.moe/v4/anime"
 
@@ -219,6 +255,5 @@ def browse_anime(sfw: bool = False,
     response = requests.get(endpoint, params=params)
     print(response.url)
     print(response)
-    
-    return response.json()["data"]
 
+    return response.json()["data"]

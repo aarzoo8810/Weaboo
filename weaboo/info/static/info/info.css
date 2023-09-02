@@ -345,7 +345,8 @@ iframe,
 
 /* Styling for Browse form */
 
-#browse-form {
+#browse-form,
+#collapseExample {
     margin-top: 1.5rem;
     padding: 1.5rem;
     margin-bottom: 1.5rem;
@@ -353,7 +354,8 @@ iframe,
     box-shadow: 0 2px 8px rgba(255, 210, 215, 0.5);
 }
 
-#browse-form button {
+#browse-form button,
+.seasons button {
     font: inherit;
     background-color: rgba(255, 210, 215, 0);
     border-style: solid;
@@ -366,7 +368,9 @@ iframe,
   }
 
 #browse-form button:hover,
-#browse-form button:active {
+#browse-form button:active,
+.seasons button:hover,
+.seasons button:active {
   background-color: #FFD2D7;
   color: #322653;
 }
@@ -389,6 +393,23 @@ iframe,
   padding: 0.25rem;
   border-radius: 6px;
   border: 1px solid #ccc;
+}
+
+#collapseExample  .col-3{
+    padding: 0.3rem 0;
+    text-align: center;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #FFD2D7;
+}
+
+#collapseExample  .col-3:hover {
+    background-color: #8062D6;
+}
+
+#collapseExample a {
+    text-decoration: none;
+    color: #FFD2D7;
 }
 
 #browse-list h2 {
