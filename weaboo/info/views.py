@@ -121,7 +121,7 @@ def browse_anime_view(request):
         # print(type(request.GET["limit"]))
         # limit = int(request.GET.pop("limit")[0])
         # print(type(limit))
-        result = browse_anime(**request.GET)
+        result = browse_anime(**request.GET)["data"]
         print(len(result))
         return render(request, "info/browse_anime.html", {
             "shows": result,

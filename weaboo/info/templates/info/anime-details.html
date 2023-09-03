@@ -6,27 +6,6 @@
 {% block stylesheet %}<link rel="stylesheet" href="{% static 'info/info.css' %}">{% endblock  %} 
 {% block content %}
 
-{% comment %} <div class="container text-center">
-<section id='header'>
-    <div class="img-header" style="background-image: url('{{show.images.webp.large_image_url}}'); background-repeat: no-repeat;  background-size: 100%">
-        <div class="background-gradient">
-            <img class="header-img img-fluid" src="{{show.images.webp.large_image_url}}" alt="">
-        </div>
-    </div>
-
-    <div class="header-info">
-        <h1 class="show-header-title">{{show.title}}</h1>
-    </div>
-    <div class="extra-info">
-        <span class="extra-info-box carousel-text">{{show.type}}</span>
-        <span class="extra-info-box carousel-text">{{show.episodes}} Episodes</span>
-        <span class="extra-info-box carousel-text">{{show.duration}}</span>
-    </div>
-    
-</section>
-</div> {% endcomment %}
-
-<div>
   {% if show.title_english %}
     <h1 class="title">{{show.title_english}}</h1>
   {% else %}
@@ -155,34 +134,9 @@
           </div>
         </div>
       {% endif %}
-
-
-      {% comment %} <hr>
-      <h3>Comments</h3>
-      {% if not logged_in %}
-        <a href="{{url_for('login')}}" class="btn add-btn">Login to Comment </a>
-      {% else %}
-      <div class="comment-section">
-        {{wtf.quick_form(form, novalidate=True)}}
-        {{ckeditor.load(pkg_type="basic")}}
-        <hr>
-        {% endif %}
-        {% for comment in comments %}
-        <div class="comment">
-          <div class="comment-header">
-            <img src="{{comment[1].user_email | gravatar(size=30)}}" class="img-fluid rounded gravatar-pic" alt="profile-pic">
-            <span>{{comment[1].user_name}}</span>
-          </div>
-          <div class="comment-body">
-            {{comment[0] | safe}}
-          </div>
-        </div>
-        <hr>
-        {% endfor %}
-      </div> {% endcomment %}
       
     </div>
   </div>
   
-</div>
+
 {% endblock  %}
