@@ -5,7 +5,8 @@ from django.shortcuts import render
 
 from django.shortcuts import render
 import requests
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from .forms import BrowseAnimeForm
 
 
@@ -21,6 +22,15 @@ def index(request):
                                                "popular_shows": popular_shows[:6],
                                                "popular_manga": popular_manga_list,
                                                })
+
+
+def search_view(request):
+    if request.GET:
+        query = request.GET["q"]
+        searched_shows = browse_anime(q=query)["data"]
+        return render(request, "info/browse_anime.html", {"shows": searched_shows})
+    
+    return HttpResponseRedirect(reverse("index"))
 
 
 def popular_shows_view(request):

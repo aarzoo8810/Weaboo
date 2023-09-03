@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name='index'),
+    path("search", views.search_view, name="search"),
     path("anime/popular", views.popular_shows_view, name="popular"),
     path("anime/seasonal", views.current_seasonal_anime, name="current-seasonal-anime"),
     path("anime/seasonal/<int:year>/<str:season>", views.seasonal_anime, name="seasonal-anime"),
