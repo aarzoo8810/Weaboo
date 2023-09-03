@@ -1,0 +1,49 @@
+#body {
+    max-width: 1920px;
+}
+
+nav, 
+.dropdown-menu, 
+.dropdown-item{
+    background-color: #8062D6;
+    color: #322653;
+}
+
+.navbar-brand {
+    font-weight: bolder;
+}
+
+.dropdown-item:hover {
+    background-color: #322653;
+    color: #FFD2D7;
+}
+
+.navbar-nav .nav-item .nav-link{
+    color: #322653;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: #FFD2D7;
+}
+
+nav {
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.search-form {
+    border-radius: 5px;
+    margin-right: 0.5rem;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.account-btn-li a{
+    display: block;
+    margin: 0 0.3rem;
+}
+
+@media (max-width: 991px) {
+   .account-btn-li a{
+    margin: 0.5rem 0.5rem;
+}
+}
