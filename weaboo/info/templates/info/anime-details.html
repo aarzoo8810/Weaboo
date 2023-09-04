@@ -5,7 +5,7 @@
 
 {% block stylesheet %}<link rel="stylesheet" href="{% static 'info/info.css' %}">{% endblock  %} 
 {% block content %}
-
+<div class="container">
   {% if show.title_english %}
     <h1 class="title">{{show.title_english}}</h1>
   {% else %}
@@ -137,6 +137,6 @@
       
     </div>
   </div>
-  
+</div>
 
 {% endblock  %}

@@ -2,6 +2,10 @@
     max-width: 1920px;
 }
 
+.body-container {
+    padding: 0;
+}
+
 nav, 
 .dropdown-menu, 
 .dropdown-item{
