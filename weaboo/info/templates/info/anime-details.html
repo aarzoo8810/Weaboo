@@ -115,7 +115,7 @@
           <div class="popular-now-body">
             <div class="row">
               {% for show in recommendations %}
-                <div class="col-xxl-2 col-xl-3 col-md-3 col-sm-4 col-6 show-card">
+                <div class="col-xxl-3 col-xl-3 col-md-4 col-sm-4 col-6 show-card">
                   {% if type == "manga" %}
                   <a href="{% url 'manga-details' show.entry.mal_id %}" class="show-item">
                   {% else %}

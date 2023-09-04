@@ -69,7 +69,7 @@
                 {% for show in seasonal_popular_shows %}
                   <div class="col-xxl-2 col-xl-3 col-md-3 col-sm-4 col-6 show-card">
                     <a href="{% url 'anime-details' show.mal_id %}" class="show-item">
-                      <img src="{{show.images.webp.image_url}}" alt="" class="show-img img-fluid">
+                      <img src="{{show.images.webp.image_url}}" alt="" class="show-img img-fluid .img-cover">
                       {% if show.title_english %}
                         <p>{{show.title_english}}</p>
                       {% else %}
@@ -111,7 +111,7 @@
         <hr>
         <div class="row">
         {% for manga in popular_manga %}
-          <div class="col-xl-6 col-lg-3 col-md-3 col-sm-4 col-6">
+          <div class="col-xl-6 col-lg-3 col-md-3 col-sm-4 col-6 col-item">
               <a href="{% url 'manga-details' manga.mal_id %}" class='top-manga-item'>
                 <img src="{{manga.images.jpg.image_url}}" alt="{{manga.title}}" class="manga-img img-fluid">
                 <p>{{manga.title}}</p>
