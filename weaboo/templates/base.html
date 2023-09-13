@@ -34,34 +34,36 @@
                   <li><a class="dropdown-item" href="{% url 'browse-anime' %}">Browse</a></li>
                   <li><a class="dropdown-item" href="#">Top</a></li>
                   <li><a class="dropdown-item" href="{% url 'popular' %}">Popular</a></li>
-                  {% comment %} <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li> {% endcomment %}
                 </ul>
               </li>
-              {% comment %} <li class="nav-item dropdown">
+              <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Manga
                 </a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#">Top</a></li>
-                  <li><a class="dropdown-item" href="#">Popular</a></li> {% endcomment %}
-                  {% comment %} <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li> {% endcomment %}
+                  <li><a class="dropdown-item" href="#">Popular</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
                 </ul>
               </li>
             </ul>
 
-            <form class="d-flex search-form" role="search" action="{% url 'search' %}" method="GET">
-              <input class="form-control me-2" name="q" type="search" placeholder="Search" aria-label="Search">
+            <form id="autocomplete" class="d-flex search-form autocomplete" role="search" action="{% url 'search' %}" method="GET">
+              <input class="form-control me-2 autocomplete-input" id="text-search" name="q" type="search" placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-dark" type="submit">Search</button>
             </form>
-
-            <div class="account-btn-li">
-              <a href="#" class="btn btn-outline-dark account-btn">Sign Up</a>
-            </div>
-            <div class="account-btn-li">
-              <a href="#" class="btn btn-outline-dark account-btn">Log In</a>
-            </div>
+            
+            {% if request.user.is_authenticated %}
+            <p>{{request.user.username}}</P>
+            {% else %}
+              <div class="account-btn-li">
+                <a href="#" class="btn btn-outline-dark account-btn">Sign Up</a>
+              </div>
+              <div class="account-btn-li">
+                <a href="#" class="btn btn-outline-dark account-btn">Log In</a>
+              </div>
+            {% endif %}
           </div>
         </div>
     </nav>

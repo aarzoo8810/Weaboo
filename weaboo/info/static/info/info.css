@@ -26,8 +26,6 @@ body {
 .carousel-info {
     background-image: linear-gradient(to right, rgba(53, 21, 93,0.9),  rgba(53, 21, 93,0.2));
     border-radius: 15px;
-    /* padding-left: 10%;
-    padding-right: 40%; */
     padding: 2rem 40% 2rem 10%;
     height: 18rem;
 }
@@ -361,6 +359,13 @@ iframe,
 
 /* Styling for Browse form */
 
+.errorlist {
+    list-style: none;
+    color: rgb(255, 0, 0);
+    padding: 0;
+    font-size: smaller;
+}
+
 #browse-form,
 #collapseExample {
     margin-top: 1.5rem;
@@ -505,4 +510,49 @@ iframe,
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
+}
+
+
+/* signup page styling */
+
+
+.register-form {
+    max-width: 40rem;
+    padding: 1.5rem;
+    margin-top: 8rem;
+    margin-bottom: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(255, 210, 215, 0.5);
+}
+
+.register-form h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.form label {
+    display: block;
+    margin-top: 1rem;
+}
+
+.form input {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.form button {
+    margin-top: 1rem;
+    background-color: rgba(255, 210, 215, 0);
+    border-style: solid;
+    border-width: 1px;
+    border-color: #FFD2D7;
+    color: #FFD2D7;
+    padding: 0.5rem 1.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.form button:hover {
+    background-color: #FFD2D7;
+    color: #322653;
 }

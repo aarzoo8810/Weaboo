@@ -1,4 +1,10 @@
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render
+from django.http import HttpResponse
+import json
+
+from .forms import AccountForm, LoginForm
 
 # Create your views here.
 
@@ -16,6 +22,7 @@ def index(request):
     season_list = get_season(limit=11)["data"]
     popular_shows = browse_anime(order_by="popularity", min_score=0.1)["data"]
     popular_manga_list = get_top_manga(limit=10)
+    print(request.user.is_authenticated)
     return render(request, "info/index.html", {"first_show": season_list[0],
                                                "shows": season_list[1:5],
                                                "seasonal_popular_shows": season_list[5:],
@@ -131,6 +138,44 @@ def browse_anime_view(request):
     return render(request, "info/browse_anime.html", {
         "form": form
     })
+
+
+
+def signup_view(request):
+    if request.method == "POST":
+        form = AccountForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            print(form.cleaned_data)
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password1")
+            user = authenticate(request, username=username, password=password)
+            login(request, user)
+            return HttpResponseRedirect(reverse("index"))
+    else:
+        form = AccountForm()
+
+    return render(request, "info/signin.html", {
+        "form": form
+    })
+
+
+def login_view(request):
+    if request.POST:
+        form = LoginForm(request.POST)
+        email = request.POST["email"]
+        password = request.POST["password"]
+        print(email, password)
+        user = authenticate(request, email=email, password=password)
+
+        if user is not None:
+            login(request, user)
+        print(request.user.is_authenticated)
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        form = LoginForm()
+
+    return render(request, "info/signin.html", {"login_form": form})
 
 
 def get_anime_details(mal_anime_id):
