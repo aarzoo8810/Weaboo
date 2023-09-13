@@ -163,18 +163,13 @@ def signup_view(request):
 
 
 def login_view(request):
-    if request.POST:
-        form = LoginForm(request.POST)
-        email = request.POST["email"]
-        password = request.POST["password"]
-        print(email, password)
-        user = authenticate(request, email=email, password=password)
-
-        if user is not None:
-            login(request, user)
-        print(request.user.is_authenticated)
-        return HttpResponseRedirect(reverse("index"))
+    if request.method == 'POST':
+        form = AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            login(request, form.get_user())
+            return HttpResponseRedirect(reverse("index"))
+        
     else:
-        form = LoginForm()
+        form = AuthenticationForm()
+    return render(request, 'info/signin.html', {'login_form': form})
 
-    return render(request, "info/signin.html", {"login_form": form})
