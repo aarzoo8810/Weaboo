@@ -47,6 +47,18 @@
                   <li><a class="dropdown-item" href="#">Something else here</a></li>
                 </ul>
               </li>
+
+              {% if request.user.is_authenticated %}
+                <li class="nav-item dropdown username-btn ms-3">
+                  <button type="button" class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{request.user.username}}
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">List</a></li>
+                    <li><a class="dropdown-item" href="#">Logout</a></li>
+                  </ul>
+                </li>
+              {% endif %}
             </ul>
 
             <form id="autocomplete" class="d-flex search-form autocomplete" role="search" action="{% url 'search' %}" method="GET">
@@ -54,9 +66,7 @@
               <button class="btn btn-outline-dark" type="submit">Search</button>
             </form>
             
-            {% if request.user.is_authenticated %}
-            <p>{{request.user.username}}</P>
-            {% else %}
+            {% if not request.user.is_authenticated %}
               <div class="account-btn-li">
                 <a href="#" class="btn btn-outline-dark account-btn">Sign Up</a>
               </div>

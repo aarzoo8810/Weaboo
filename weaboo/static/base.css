@@ -50,4 +50,11 @@ nav {
    .account-btn-li a{
     margin: 0.5rem 0.5rem;
 }
+
+    .username-btn {
+        margin-left: 0;
+    }
+    .username-btn button{
+        width: 100%;
+    }
 }
