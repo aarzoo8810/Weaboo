@@ -2,7 +2,7 @@ from django.shortcuts import render
 import requests
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -173,3 +173,7 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'info/signin.html', {'login_form': form})
 
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("index"))

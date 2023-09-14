@@ -11,6 +11,7 @@ urlpatterns = [
     path("manga/<int:mal_manga_id>", views.manga_details_view, name='manga-details'),
     path("browse/anime", views.browse_anime_view, name="browse-anime"),
     path("signup", views.signup_view, name="signup"),
-    path("login", views.login_view, name="login")
+    path("login", views.login_view, name="login"),
+    path("logout", views.logout_view, name="logout"),
 ]
 
