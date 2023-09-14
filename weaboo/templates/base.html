@@ -68,10 +68,10 @@
             
             {% if not request.user.is_authenticated %}
               <div class="account-btn-li">
-                <a href="#" class="btn btn-outline-dark account-btn">Sign Up</a>
+                <a href="{% url 'signup' %}" class="btn btn-outline-dark account-btn">Sign Up</a>
               </div>
               <div class="account-btn-li">
-                <a href="#" class="btn btn-outline-dark account-btn">Log In</a>
+                <a href="{% url 'login' %}" class="btn btn-outline-dark account-btn">Log In</a>
               </div>
             {% endif %}
           </div>
