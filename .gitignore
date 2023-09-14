@@ -10,7 +10,7 @@ weaboo/weaboo/__pycache__/
 weaboo/weaboo/__pycache__/
 weaboo/weaboo/__pycache__/settings.cpython-310.pyc
 local_settings.py
-# db.sqlite3
+# db.sqlite3   # comment this out when migrating database
 db.sqlite3-journal
 media
 
