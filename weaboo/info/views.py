@@ -71,11 +71,17 @@ def add_anime(request, mal_anime_id, list_id):
     if request.user.is_authenticated:
         user_id = request.user.id
         print(mal_anime_id, list_id, user_id)
+
+        # check if show already exists for user if it does update it
         user = CustomUser.objects.filter(id=user_id)
+        user_show_list = user[0].user_show_list.get(mal_id=mal_anime_id)
         list = ListType.objects.filter(id=list_id)
-        user_show = UserShowList.objects.create(mal_id=mal_anime_id)
-        user_show.user.set(user)
-        user_show.list.set(list)
+        if user_show_list is None:
+            user_show_list_instance = UserShowList.objects.create(mal_id=mal_anime_id)
+            user_show_list_instance.user.set(user)
+            user_show_list_instance.list.set(list)
+        else:
+            user_show_list.list.set(list)
         return redirect("anime-details", mal_anime_id=mal_anime_id)
     else:
         return HttpResponseRedirect(reverse("login"))
