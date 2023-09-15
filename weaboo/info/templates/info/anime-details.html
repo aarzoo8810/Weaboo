@@ -20,13 +20,19 @@
       <div class="sidebar-btn">
         <div class="dropdown acc-add-btn">
           <a class="btn  dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Add to List
+            {% if user_list_status %}
+              {{ user_list_status.list_name }}
+            {% else %}
+              Add to List
+            {% endif %}
           </a>
-          <ul class="dropdown-menu">
-            {% for type in list_types %}
-              <li><a class="dropdown-item" href="{% url 'add-anime' show.mal_id type.id%}">{{type.list_name}}</a></li>
-            {% endfor %}
-          </ul>
+          {% if list_types %}
+            <ul class="dropdown-menu">
+              {% for list in list_types %}
+                <li><a class="dropdown-item" href="{% url 'add-anime' show.mal_id list.id%}">{{ list.list_name }}</a></li>
+              {% endfor %}
+            </ul>
+          {% endif %}
         </div>
           <div class='acc-add-btn'>
             <a class='btn'>Update</a>

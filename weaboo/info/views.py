@@ -4,8 +4,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import render
 from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
 import json
 
 from .forms import AccountForm, LoginForm
@@ -53,18 +53,26 @@ def popular_shows_view(request):
 def anime_detail_view(request, mal_anime_id):
     mal = Mal()
     anime = mal.get_anime_details(mal_anime_id)
-    recommendations = mal.get_anime_recommendation(mal_anime_id)
     list_types = ListType.objects.all()
-    if len(recommendations) > 0:
-        return render(request, 'info/anime-details.html', {
-            "show": anime,
-            "recommendations": recommendations[:6],
-            "list_types": list_types
-        })
+    user = request.user
+
+    recommendations = mal.get_anime_recommendation(mal_anime_id)
+    if len(recommendations) == 0:
+        recommendations = None
     else:
-        return render(request, 'info/anime-details.html', {
-            "show": anime
-        })
+        recommendations = recommendations[:6]
+
+    try:
+        user_list_status = UserShowList.objects.get(user=user, mal_id=mal_anime_id).list.get()
+    except ObjectDoesNotExist:
+        user_list_status = None
+
+    return render(request, 'info/anime-details.html', {
+        "show": anime,
+        "recommendations": recommendations,
+        "list_types": list_types,
+        "user_list_status": user_list_status
+    })
 
 
 def add_anime(request, mal_anime_id, list_id):
@@ -74,17 +82,22 @@ def add_anime(request, mal_anime_id, list_id):
 
         # check if show already exists for user if it does update it
         user = CustomUser.objects.filter(id=user_id)
-        user_show_list = user[0].user_show_list.get(mal_id=mal_anime_id)
         list = ListType.objects.filter(id=list_id)
-        if user_show_list is None:
-            user_show_list_instance = UserShowList.objects.create(mal_id=mal_anime_id)
+
+        try:
+            user_show_list = user[0].user_show_list.get(mal_id=mal_anime_id)
+        except ObjectDoesNotExist:
+            user_show_list_instance = UserShowList.objects.create(
+                mal_id=mal_anime_id)
             user_show_list_instance.user.set(user)
             user_show_list_instance.list.set(list)
         else:
             user_show_list.list.set(list)
+
         return redirect("anime-details", mal_anime_id=mal_anime_id)
     else:
         return HttpResponseRedirect(reverse("login"))
+
 
 def current_seasonal_anime(request):
     mal = Mal()
@@ -190,7 +203,7 @@ def login_view(request):
         if form.is_valid():
             login(request, form.get_user())
             return HttpResponseRedirect(reverse("index"))
-        
+
     else:
         form = AuthenticationForm()
     return render(request, 'info/signin.html', {'login_form': form})
