@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import requests
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -11,6 +11,7 @@ import json
 from .forms import AccountForm, LoginForm
 from .mal_api import Mal
 from .forms import BrowseAnimeForm
+from .models import CustomUser, ListType, UserShowList
 
 
 # Create your views here.
@@ -53,16 +54,31 @@ def anime_detail_view(request, mal_anime_id):
     mal = Mal()
     anime = mal.get_anime_details(mal_anime_id)
     recommendations = mal.get_anime_recommendation(mal_anime_id)
+    list_types = ListType.objects.all()
     if len(recommendations) > 0:
         return render(request, 'info/anime-details.html', {
             "show": anime,
             "recommendations": recommendations[:6],
+            "list_types": list_types
         })
     else:
         return render(request, 'info/anime-details.html', {
             "show": anime
         })
 
+
+def add_anime(request, mal_anime_id, list_id):
+    if request.user.is_authenticated:
+        user_id = request.user.id
+        print(mal_anime_id, list_id, user_id)
+        user = CustomUser.objects.filter(id=user_id)
+        list = ListType.objects.filter(id=list_id)
+        user_show = UserShowList.objects.create(mal_id=mal_anime_id)
+        user_show.user.set(user)
+        user_show.list.set(list)
+        return redirect("anime-details", mal_anime_id=mal_anime_id)
+    else:
+        return HttpResponseRedirect(reverse("login"))
 
 def current_seasonal_anime(request):
     mal = Mal()

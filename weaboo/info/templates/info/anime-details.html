@@ -20,10 +20,12 @@
       <div class="sidebar-btn">
         <div class="dropdown acc-add-btn">
           <a class="btn  dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown button
+            Add to List
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
+            {% for type in list_types %}
+              <li><a class="dropdown-item" href="{% url 'add-anime' show.mal_id type.id%}">{{type.list_name}}</a></li>
+            {% endfor %}
           </ul>
         </div>
           <div class='acc-add-btn'>
