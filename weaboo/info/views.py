@@ -234,12 +234,13 @@ def user_list_view(request, user_id):
         user_show_list.save()
 
         user = CustomUser.objects.get(id=user_id)
-        user_list = user.user_show_list.all()
+        user_list = user.user_show_list.all().order_by("-id")
         status_list = ListType.objects.all()
         mal = Mal()
         shows = []
 
         for item in user_list:
+            print(item.id)
             show = mal.get_anime_details(item.mal_id)
             show["watching_status"] = item.list.get()
             show["episodes_watched"] = item.episode_watched
@@ -253,7 +254,7 @@ def user_list_view(request, user_id):
 
     else:
         user = CustomUser.objects.get(id=user_id)
-        user_list = user.user_show_list.all()
+        user_list = user.user_show_list.all().order_by("-id")
         status_list = ListType.objects.all()
         mal = Mal()
         shows = []
