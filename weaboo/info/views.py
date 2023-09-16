@@ -102,6 +102,10 @@ def add_anime(request, mal_anime_id, list_id):
         return HttpResponseRedirect(reverse("login"))
 
 
+def delete_anime(request, mal_anime_id):
+    UserShowList.objects.get(user=request.user, mal_id=mal_anime_id).delete()
+    return redirect("user-list", user_id=request.user.id)
+
 def current_seasonal_anime(request):
     mal = Mal()
     endpoint = "https://api.jikan.moe/v4/seasons"

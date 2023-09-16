@@ -63,6 +63,7 @@
                                     </div>
                                     {% if request.user.id == user.id%}
                                         <button>Update</button>
+                                        <a type="button" onClick="deleteAlert('{{show.mal_id}}', '{{show.title}}')" class="btn btn-outline-danger" href="#" style="width:100%; margin-top: 0.5rem">Danger</a>
                                     {% endif %}
                                 </form>
 
@@ -75,5 +76,13 @@
         {% endif %}
 
 </div>
+<script>
+    function deleteAlert(mal_id, title) {
+        let text = "Warning!\nYou are going to delete " + title;
+        if (confirm(text) == true) {
+            location.href="{% url "delete-anime" 12345 %}".replace(/12345/, mal_id)
+        };
+      }
+</script>
 
 {% endblock  %}

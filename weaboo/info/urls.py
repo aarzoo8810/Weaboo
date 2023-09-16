@@ -14,6 +14,7 @@ urlpatterns = [
     path("signup", views.signup_view, name="signup"),
     path("login", views.login_view, name="login"),
     path("anime/list/<int:user_id>/", views.user_list_view, name="user-list"),
+    path("anime/list/delete/<int:mal_anime_id>", views.delete_anime, name="delete-anime"),
     path("logout", views.logout_view, name="logout"),
 ]
 
