@@ -54,7 +54,7 @@
                     {{request.user.username}}
                   </button>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">List</a></li>
+                    <li><a class="dropdown-item" href="{% url "user-list" request.user.id %}">List</a></li>
                     <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                   </ul>
                 </li>
