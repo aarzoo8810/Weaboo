@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{user.username}}'s List{% endblock  %}
+
+{% block stylesheet %}<link rel="stylesheet" href="{% static 'info/info.css' %}">{% endblock  %} 
+
+{% block content %}
+
+<div class="container">
+    {% if shows %}
+            <section id="user-list">
+                <h1>{{user.username}}'s List</h1>
+                <ul>
+                {% for show in shows %}
+                    <li>
+                        <div class="row">
+                            <div class="col-lg-2 col-3 user-list-img-div">
+                                <img src="{{show.images.webp.image_url}}" class="img-fluid" alt="{{show.title}}"></img>
+                            </div>
+
+                            <div class="col-lg-10 col-9 browse-li-div">
+                                <a href="{% url 'anime-details' show.mal_id %}" target="_blank">
+                                    <h3 class="browse-li-heading">
+                                        {% if show.title_english %}
+                                            {{show.title_english}}
+                                        {% else %}
+                                            {{show.title}}
+                                        {% endif %}
+                                    </h3>
+                                </a>
+                                <div>
+                                    <span class="extra-info-box carousel-text">{{show.score}}</span>
+                                    <span class="extra-info-box carousel-text">{{show.type}}</span>
+                                    <span class="extra-info-box carousel-text">{{show.aired.from|slice:":10"}}</span>
+                                </div>
+                                {% comment %} <p class="synopsis">
+                                    {{show.synopsis}}
+                                </p> {% endcomment %}
+
+                                <form class="user-list-form" action="{% url "user-list" user.id%}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{show.mal_id}}" name="hidden-mal-id" />
+                                    <input type="hidden" value="{{show.episodes}}" name="total-episodes" />
+
+
+                                    <div class="user-list-form-control">
+                                        <label style="display:block">Episode: </label>
+                                        <input name="episode-number" min=0 max={{show.episodes}} type="number" value="{{show.episodes_watched}}" />
+                                        <span>/ {{show.episodes}}</span>
+                                    </div>
+
+                                    <div class="user-list-form-control">
+                                    <label>List: </label>
+                                        <select name="watching-status">
+                                            <option value="{{show.watching_status.id}}">{{show.watching_status.list_name}}</option>
+                                            {% for status in status_list %}
+                                                {% if status.id !=  show.watching_status.id %}
+                                                    <option value="{{status.id}}">{{status.list_name}}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <button>Update</button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+                </ul>
+            </secion>
+        {% endif %}
+
+</div>
+
+{% endblock  %}

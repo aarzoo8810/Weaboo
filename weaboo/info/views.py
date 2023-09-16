@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-import requests
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import login, authenticate, logout
@@ -7,6 +6,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 import json
+
+import threading
+import requests
 
 from .forms import AccountForm, LoginForm
 from .mal_api import Mal
@@ -97,6 +99,8 @@ def add_anime(request, mal_anime_id, list_id):
         return redirect("anime-details", mal_anime_id=mal_anime_id)
     else:
         return HttpResponseRedirect(reverse("login"))
+    
+
 
 
 def current_seasonal_anime(request):
@@ -208,6 +212,58 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'info/signin.html', {'login_form': form})
 
+
+def user_list_view(request, user_id):
+    user = CustomUser.objects.get(id=user_id)
+    user_list = user.user_show_list.all()
+    status_list = ListType.objects.all()
+    mal = Mal()
+    shows = []
+
+    for item in user_list:
+        show = mal.get_anime_details(item.mal_id)
+        show["watching_status"] = item.list.get()
+        show["episodes_watched"] = item.episode_watched
+        shows.append(show)
+
+    if request.method == "POST":
+        mal_id = int(request.POST["hidden-mal-id"])
+        total_episodes = int(request.POST["total-episodes"])
+        episode_num = int(request.POST["episode-number"])
+        watching_status_id = int(request.POST["watching-status"])
+
+        # get list object from database to save in UserListShow
+        list_type = ListType.objects.filter(id=watching_status_id)
+        if list_type[0].id == 3: # id=3 is a for completed show if it is true we are going to set episode_watched = total_episodes
+            episode_num = total_episodes
+
+        user_show_list = UserShowList.objects.get(mal_id=mal_id)
+
+        user_show_list.list.set(list_type)
+        user_show_list.episode_watched = episode_num
+        user_show_list.save()
+
+        return render(request, "info/user_list.html", {"user": user,
+                                                       "shows": shows,
+                                                       "user_list": user_list,
+                                                       "status_list": status_list})
+
+    # threads = [threading.Thread(target=mal.get_anime_details, args=(show.mal_id,)) for show in user_list[:3]]
+
+    # for thread in threads:
+    #     thread.start()
+    # for thread in threads:
+    #     thread.join()
+    #     print(thread)
+
+    # for thread in threads:
+    #     print(thread)
+    #     shows.append(thread.response_json)
+
+    return render(request, "info/user_list.html", {"user": user,
+                                                   "shows": shows,
+                                                   "user_list": user_list,
+                                                   "status_list": status_list})
 
 def logout_view(request):
     logout(request)

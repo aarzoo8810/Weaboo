@@ -5,6 +5,7 @@ class Mal:
 
     def get_anime_details(self, mal_anime_id):
         """Get anime info by mal_id else return status code"""
+        print(mal_anime_id)
         endpoint = f"https://api.jikan.moe/v4/anime/{mal_anime_id}/full"
         response = requests.get(endpoint)
 
