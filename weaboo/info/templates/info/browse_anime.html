@@ -65,10 +65,10 @@
                     <li>
                         <a href="{% url 'anime-details' show.mal_id %}" target="_blank">
                             <div class="row">
-                                <div class="col-3 browse-li-div browse-li-img">
+                                <div class="col-lg-2 col-3 browse-li-div browse-li-img">
                                     <img src="{{show.images.webp.image_url}}" class="img-fluid" alt="{{show.title}}"></img>
                                 </div>
-                                <div class="col-9 browse-li-div">
+                                <div class="col-lg-10 col-9 browse-li-div">
                                     <h3 class="browse-li-heading">
                                         {% if show.title_english %}
                                             {{show.title_english}}

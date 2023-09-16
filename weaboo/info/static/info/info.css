@@ -483,10 +483,14 @@ iframe,
     overflow: hidden;
 }
 
+.browse-li-img {
+    max-width: 150px;
+}
+
 #browse-list ul li img {
     border-radius: 10px;
-    height: 90%;
-    width: 90%;
+    height: 100%;
+    width: 100%;
     object-fit: cover;
 }
 
@@ -530,7 +534,7 @@ iframe,
     }
     .synopsis {
         display: -webkit-box;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 5;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
@@ -607,7 +611,7 @@ iframe,
 }
 
 .user-list-img-div {
-    max-width: 170px;
+    max-width: 150px;
 }
 
 .user-list-img-div img {
