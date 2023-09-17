@@ -52,6 +52,17 @@ def popular_shows_view(request):
     })
 
 
+def top_shows_view(request):
+    mal = Mal()
+    top_shows = mal.get_top_anime()["data"]
+
+    # sorting top_shows by rank because they are sorted by rating by default so
+    # some shows which has higher rank can be below some shows with lowe rank 
+    # because of equal rating
+    top_shows = sorted(top_shows, key=lambda x: x["rank"]) # also reverse = True if needed
+    return render(request, "info/browse_anime.html", {"shows": top_shows, 
+                                                      "is_top": True})
+
 def anime_detail_view(request, mal_anime_id):
     mal = Mal()
     anime = mal.get_anime_details(mal_anime_id)

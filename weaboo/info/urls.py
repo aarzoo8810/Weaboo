@@ -7,6 +7,7 @@ urlpatterns = [
     path("anime/<int:mal_anime_id>", views.anime_detail_view, name='anime-details'),
     path("anime/add/<int:mal_anime_id>/<int:list_id>", views.add_anime, name='add-anime'),
     path("anime/popular", views.popular_shows_view, name="popular"),
+    path("anime/top", views.top_shows_view, name="top"),
     path("anime/seasonal", views.current_seasonal_anime, name="current-seasonal-anime"),
     path("anime/seasonal/<int:year>/<str:season>", views.seasonal_anime, name="seasonal-anime"),
     path("manga/<int:mal_manga_id>", views.manga_details_view, name='manga-details'),

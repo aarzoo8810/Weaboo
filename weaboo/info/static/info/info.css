@@ -455,6 +455,10 @@ iframe,
     color: #FFD2D7;
 }
 
+#browse-list {
+    margin-top: 2rem;
+}
+
 #browse-list h2 {
     text-align: center;
     padding-bottom: 0.5rem 0;

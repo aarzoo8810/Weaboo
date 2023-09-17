@@ -59,7 +59,13 @@
 
         {% if shows %}
             <section id="browse-list">
-                <h2>Results</h2>
+                <h2>
+                    {% if "is_top" %}
+                        Top 25 Anime
+                    {% else %}
+                        Results
+                    {% endif %}
+                </h2>
                 <ul>
                 {% for show in shows %}
                     <li>
@@ -70,6 +76,9 @@
                                 </div>
                                 <div class="col-lg-10 col-9 browse-li-div">
                                     <h3 class="browse-li-heading">
+                                        {% if is_top %}
+                                            #{{show.rank}}. 
+                                        {% endif %}
                                         {% if show.title_english %}
                                             {{show.title_english}}
                                         {% else %}

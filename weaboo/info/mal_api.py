@@ -94,6 +94,20 @@ class Mal:
         response_json = response.json()
         return response_json["data"]
 
+
+    def get_top_anime(self, type: str=None, filter: str=None, rating: str=None, page: int=1, limit: int=None):
+        endpoint = "https://api.jikan.moe/v4/top/anime"
+        params = {
+            "type": type,
+            "filter": filter,
+            "page": page,
+            "limit": limit
+        }
+        response = requests.get(endpoint, params=params)
+        print(response.status_code)
+        response_json = response.json()
+        return response_json
+
     def browse_anime(self,
                      sfw: bool = False,
                      page: int = 1,
