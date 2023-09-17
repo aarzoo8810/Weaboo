@@ -107,7 +107,7 @@
   <div class="col-xl-3 right-box">
     <section id="right">
       <div class='top-manga'>
-        <p class='top-manga-header'>Popular Manga<a href="#" class="">More...</a></p>
+        <p class='top-manga-header'>Popular Manga<a href="{% url "popular-manga" %}" class="">More...</a></p>
         <hr>
         <div class="row">
         {% for manga in popular_manga %}

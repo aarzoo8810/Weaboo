@@ -60,8 +60,12 @@
         {% if shows %}
             <section id="browse-list">
                 <h2>
-                    {% if "is_top" %}
+                    {% if is_top %}
                         Top 25 Anime
+                    {% elif is_popular_manga %}
+                        Popular Manga
+                    {% elif is_top_manga %}
+                        Top 25 Manga
                     {% else %}
                         Results
                     {% endif %}
@@ -69,14 +73,14 @@
                 <ul>
                 {% for show in shows %}
                     <li>
-                        <a href="{% url 'anime-details' show.mal_id %}" target="_blank">
+                        <a href="{% if is_manga %}{% url 'manga-details' show.mal_id %}{% else %}{% url 'anime-details' show.mal_id %}{% endif %}" target="_blank">
                             <div class="row">
                                 <div class="col-lg-2 col-3 browse-li-div browse-li-img">
                                     <img src="{{show.images.webp.image_url}}" class="img-fluid" alt="{{show.title}}"></img>
                                 </div>
                                 <div class="col-lg-10 col-9 browse-li-div">
                                     <h3 class="browse-li-heading">
-                                        {% if is_top %}
+                                        {% if is_top or is_top_manga %}
                                             #{{show.rank}}. 
                                         {% endif %}
                                         {% if show.title_english %}
@@ -88,7 +92,7 @@
                                     <div>
                                         <span class="extra-info-box carousel-text">{{show.score}}</span>
                                         <span class="extra-info-box carousel-text">{{show.type}}</span>
-                                        <span class="extra-info-box carousel-text">{{show.aired.from|slice:":10"}}</span>
+                                        <span class="extra-info-box carousel-text">{% if is_manga %}{{show.published.from|slice:":10"}}{% else %}{{show.aired.from|slice:":10"}}{% endif %}</span>
                                     </div>
                                     <p class="synopsis">
                                         {{show.synopsis}}

@@ -22,7 +22,7 @@ def index(request):
     mal = Mal()
     season_list = mal.get_season(limit=11)["data"]
     popular_shows = mal.browse_anime(
-        order_by="popularity", min_score=0.1)["data"]
+        order_by="popularity", min_score=0.1)["data"] # min_score=0.1 because a show with score 0 can be at the  top of the list which is wrong
     popular_manga_list = mal.get_top_manga(limit=10)
     print(request.user.is_authenticated)
     return render(request, "info/index.html", {"first_show": season_list[0],
@@ -50,6 +50,26 @@ def popular_shows_view(request):
     return render(request, "info/browse_anime.html", {
         "shows": popular_shows,
     })
+
+
+def popular_manga_views(request):
+    mal = Mal()
+    popular_manga_list = mal.get_top_manga()
+
+    return render(request, "info/browse_anime.html", {"shows": popular_manga_list,
+                                                     "is_popular_manga": True,
+                                                     "is_manga": True
+                                                     })
+
+def top_manga_views(request):
+    mal = Mal()
+    top_manga_list = mal.get_top_manga(filter=None, type=None) # by default filter="bypopularity" but we want top list
+    top_manga_list = sorted(top_manga_list, key=lambda x: x["rank"])
+
+    return render(request, "info/browse_anime.html", {"shows": top_manga_list,
+                                                     "is_top_manga": True,
+                                                     "is_manga": True
+                                                     })
 
 
 def top_shows_view(request):
