@@ -10,6 +10,7 @@ class Mal:
         response = requests.get(endpoint)
 
         try:
+            print(response.json())
             response_json = response.json()["data"]
         except TypeError:
             return response.status_code
