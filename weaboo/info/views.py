@@ -303,7 +303,7 @@ def user_list_view(request, user_id):
             show["episodes_watched"] = item.episode_watched
             shows.append(show)
 
-            request_made = 0 # only three requests can be made per second
+            request_made += 1 # only three requests can be made per second
             if request_made == 3:
                 time.sleep(2)
                 request_made = 0
