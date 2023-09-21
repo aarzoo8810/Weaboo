@@ -1,0 +1,26 @@
+{% if seasons %}
+        <div class="seasons">
+            <p class="d-inline-flex gap-1">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        Browse Archived Seasons
+                    </button>
+                  </div>
+              </p>
+            <div class="collapse" id="collapseExample">
+                {% for season in seasons %}
+                    <div class="row">
+                        <div class="col">
+                            <div class="row">
+                                {% for seasonstr in season.seasons %}
+                                    <div class="col-3">
+                                        <a href="{% url 'seasonal-anime' season.year seasonstr%}">{{season.year}} {{seasonstr|capfirst}}</a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+{% endif %}

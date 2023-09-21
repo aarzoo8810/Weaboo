@@ -196,6 +196,8 @@ def manga_details_view(request, mal_manga_id):
 
 def browse_anime_view(request):
     mal = Mal()
+    endpoint = "https://api.jikan.moe/v4/seasons"
+    response = requests.get(endpoint).json()["data"]
     if request.GET:
         form = BrowseAnimeForm(request.GET)
         request.GET = request.GET.copy()
@@ -210,11 +212,13 @@ def browse_anime_view(request):
         print(len(result))
         return render(request, "info/browse_anime.html", {
             "shows": result,
-            "form": form
+            "form": form,
+            "seasons": response,
         })
     form = BrowseAnimeForm()
     return render(request, "info/browse_anime.html", {
-        "form": form
+        "form": form,
+        "seasons": response
     })
 
 
