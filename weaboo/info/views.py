@@ -305,7 +305,7 @@ def user_list_view(request, user_id):
 
             request_made = 0 # only three requests can be made per second
             if request_made == 3:
-                time.sleep(1)
+                time.sleep(2)
                 request_made = 0
 
         # threads = [threading.Thread(target=mal.get_anime_details, args=(show.mal_id,)) for show in user_list[:3]]
