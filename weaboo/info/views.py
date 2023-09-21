@@ -14,6 +14,7 @@ from .forms import AccountForm, LoginForm
 from .mal_api import Mal
 from .forms import BrowseAnimeForm
 from .models import CustomUser, ListType, UserShowList
+import time
 
 
 # Create your views here.
@@ -295,11 +296,17 @@ def user_list_view(request, user_id):
         shows = []
         print(user)
 
+        request_made = 0 # only 3 requests can be made per second
         for item in user_list:
             show = mal.get_anime_details(item.mal_id)
             show["watching_status"] = item.list.get()
             show["episodes_watched"] = item.episode_watched
             shows.append(show)
+
+            request_made = 0 # only three requests can be made per second
+            if request_made == 3:
+                time.sleep(1)
+                request_made = 0
 
         # threads = [threading.Thread(target=mal.get_anime_details, args=(show.mal_id,)) for show in user_list[:3]]
 
