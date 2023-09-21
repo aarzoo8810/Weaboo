@@ -111,6 +111,7 @@ def anime_detail_view(request, mal_anime_id):
 
 
 def add_anime(request, mal_anime_id, list_id):
+    """Function for adding a show to user's list"""
     if request.user.is_authenticated:
         user_id = request.user.id
         print(mal_anime_id, list_id, user_id)
@@ -259,14 +260,17 @@ def user_list_view(request, user_id):
         # get list object from database to save in UserListShow
         list_type = ListType.objects.filter(id=watching_status_id)
 
-        # id=3 is a for completed show
-        # if it is true we are going to set episode_watched = total_episodes
-        if list_type[0].id == 3:
-            episode_num = total_episodes
 
         user_show_list = UserShowList.objects.get(mal_id=mal_id)
         user_show_list.list.set(list_type)
-        user_show_list.episode_watched = episode_num
+
+        # id=3 is a for completed show
+        # if it is true we are going to set episode_watched = total_episodes
+        if list_type[0].id == 3 and user_show_list.episode_watched != episode_num:
+            user_show_list.episode_watched = episode_num
+        elif list_type[0].id == 3:
+            user_show_list.episode_watched = total_episodes
+
         user_show_list.save()
 
         user = CustomUser.objects.get(id=user_id)
