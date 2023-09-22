@@ -3,18 +3,19 @@ import requests
 
 class Mal:
 
-    def get_anime_details(self, mal_anime_id):
+    def get_anime_details(self, mal_anime_id, user_dictionary: dict=None):
         """Get anime info by mal_id else return status code"""
         print(mal_anime_id)
         endpoint = f"https://api.jikan.moe/v4/anime/{mal_anime_id}/full"
         response = requests.get(endpoint)
 
         try:
-            print(response.json())
             response_json = response.json()["data"]
         except TypeError:
             return response.status_code
         else:
+            if user_dictionary:
+                response_json.update(user_dictionary)
             return response_json
 
     def get_anime_recommendation(self, mal_anime_id):

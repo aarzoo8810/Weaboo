@@ -23,7 +23,7 @@ def index(request):
     mal = Mal()
     season_list = mal.get_season(limit=11)["data"]
     popular_shows = mal.browse_anime(
-        order_by="popularity", min_score=0.1)["data"] # min_score=0.1 because a show with score 0 can be at the  top of the list which is wrong
+        order_by="popularity", min_score=0.1)["data"]  # min_score=0.1 because a show with score 0 can be at the  top of the list which is wrong
     popular_manga_list = mal.get_top_manga(limit=10)
     print(request.user.is_authenticated)
     return render(request, "info/index.html", {"first_show": season_list[0],
@@ -58,19 +58,21 @@ def popular_manga_views(request):
     popular_manga_list = mal.get_top_manga()
 
     return render(request, "info/browse_anime.html", {"shows": popular_manga_list,
-                                                     "is_popular_manga": True,
-                                                     "is_manga": True
-                                                     })
+                                                      "is_popular_manga": True,
+                                                      "is_manga": True
+                                                      })
+
 
 def top_manga_views(request):
     mal = Mal()
-    top_manga_list = mal.get_top_manga(filter=None, type=None) # by default filter="bypopularity" but we want top list
+    # by default filter="bypopularity" but we want top list
+    top_manga_list = mal.get_top_manga(filter=None, type=None)
     top_manga_list = sorted(top_manga_list, key=lambda x: x["rank"])
 
     return render(request, "info/browse_anime.html", {"shows": top_manga_list,
-                                                     "is_top_manga": True,
-                                                     "is_manga": True
-                                                     })
+                                                      "is_top_manga": True,
+                                                      "is_manga": True
+                                                      })
 
 
 def top_shows_view(request):
@@ -78,11 +80,13 @@ def top_shows_view(request):
     top_shows = mal.get_top_anime()["data"]
 
     # sorting top_shows by rank because they are sorted by rating by default so
-    # some shows which has higher rank can be below some shows with lowe rank 
+    # some shows which has higher rank can be below some shows with lowe rank
     # because of equal rating
-    top_shows = sorted(top_shows, key=lambda x: x["rank"]) # also reverse = True if needed
-    return render(request, "info/browse_anime.html", {"shows": top_shows, 
+    # also reverse = True if needed
+    top_shows = sorted(top_shows, key=lambda x: x["rank"])
+    return render(request, "info/browse_anime.html", {"shows": top_shows,
                                                       "is_top": True})
+
 
 def anime_detail_view(request, mal_anime_id):
     mal = Mal()
@@ -138,6 +142,7 @@ def add_anime(request, mal_anime_id, list_id):
 def delete_anime(request, mal_anime_id):
     UserShowList.objects.get(user=request.user, mal_id=mal_anime_id).delete()
     return redirect("user-list", user_id=request.user.id)
+
 
 def current_seasonal_anime(request):
     mal = Mal()
@@ -264,7 +269,6 @@ def user_list_view(request, user_id):
         # get list object from database to save in UserListShow
         list_type = ListType.objects.filter(id=watching_status_id)
 
-
         user_show_list = UserShowList.objects.get(mal_id=mal_id)
         user_show_list.list.set(list_type)
 
@@ -274,23 +278,13 @@ def user_list_view(request, user_id):
             user_show_list.episode_watched = episode_num
         elif list_type[0].id == 3:
             user_show_list.episode_watched = total_episodes
-
         user_show_list.save()
 
         user = CustomUser.objects.get(id=user_id)
         user_list = user.user_show_list.all().order_by("-id")
         status_list = ListType.objects.all()
-        mal = Mal()
-        shows = []
+        shows = user_list_helper_func(user_list)
 
-        for item in user_list:
-            print(item.id)
-            show = mal.get_anime_details(item.mal_id)
-            show["watching_status"] = item.list.get()
-            show["episodes_watched"] = item.episode_watched
-            shows.append(show)
-
-        print(request.POST)
         return render(request, "info/user_list.html", {"user": user,
                                                        "shows": shows,
                                                        "user_list": user_list,
@@ -300,40 +294,34 @@ def user_list_view(request, user_id):
         user = CustomUser.objects.get(id=user_id)
         user_list = user.user_show_list.all().order_by("-id")
         status_list = ListType.objects.all()
-        mal = Mal()
-        shows = []
-        print(user)
-
-        request_made = 0 # only 3 requests can be made per second
-        for item in user_list:
-            show = mal.get_anime_details(item.mal_id)
-            show["watching_status"] = item.list.get()
-            show["episodes_watched"] = item.episode_watched
-            shows.append(show)
-
-            request_made += 1 # only three requests can be made per second
-            if request_made == 3:
-                time.sleep(2)
-                request_made = 0
-
-        # threads = [threading.Thread(target=mal.get_anime_details, args=(show.mal_id,)) for show in user_list[:3]]
-
-        # for thread in threads:
-        #     thread.start()
-        # for thread in threads:
-        #     thread.join()
-        #     print(thread)
-
-        # for thread in threads:
-        #     print(thread)
-        #     shows.append(thread.response_json)
+        shows = user_list_helper_func(user_list)
 
     return render(request, "info/user_list.html", {"user": user,
-                                                    "shows": shows,
-                                                    "user_list": user_list,
-                                                    "status_list": status_list})
+                                                   "shows": shows,
+                                                   "user_list": user_list,
+                                                   "status_list": status_list})
 
 
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("index"))
+
+
+
+def user_list_helper_func(user_list):
+    start = time.time()
+    mal = Mal()
+    shows = []
+    threads = [threading.Thread(target=lambda item=item: shows.append(mal.get_anime_details(item.mal_id, {
+                                    "watching_status": item.list.get(), "episodes_watched": item.episode_watched}))) for item in user_list]
+    time_interval = 2.3 / 3  # 3 is maximum number of threads executed per second
+    print(time_interval)
+    for thread in threads:
+        thread.start()
+        time.sleep(time_interval)
+    for thread in threads:
+        thread.join()
+
+    end = time.time()
+    print(end - start)
+    return shows
