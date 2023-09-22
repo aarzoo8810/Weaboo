@@ -89,9 +89,9 @@
               <li>{{related_item.relation|capfirst}}: 
                 {% for item in related_item.entry %}
                   {% if related_item.relation == 'Adaptation' %}
-                    <a href="{% url 'anime-details' item.mal_id %}">{{item.name}}</a>
+                    <a href="{% url 'anime-details' item.mal_id %}" style="font-size:small">{{item.name}}</a>
                   {% else %}
-                    <a href="{% url 'manga-details' item.mal_id%}">{{item.name}}</a>
+                    <a href="{% url 'manga-details' item.mal_id%}" style="font-size:small">{{item.name}}</a>
                   {% endif %}
                   
                   {% if related_item.entry|length > 1 %}
