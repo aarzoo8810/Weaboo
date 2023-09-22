@@ -15,16 +15,65 @@ from .mal_api import Mal
 from .forms import BrowseAnimeForm
 from .models import CustomUser, ListType, UserShowList
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 
 # Create your views here.
 def index(request):
     # get list of current anime
     mal = Mal()
-    season_list = mal.get_season(limit=11)["data"]
-    popular_shows = mal.browse_anime(
-        order_by="popularity", min_score=0.1)["data"]  # min_score=0.1 because a show with score 0 can be at the  top of the list which is wrong
-    popular_manga_list = mal.get_top_manga(limit=10)
+
+    def fetch_season_list():
+        try:
+            return mal.get_season(limit=11)["data"]
+        except Exception as e:
+            print(f"Error fetching season list: {e}")
+            return []
+
+    def fetch_popular_shows():
+        # min_score=0.1 because a show with score 0 can be at the  top of the list by rank which is wrong
+        try:
+            return mal.browse_anime(order_by="popularity", min_score=0.1)["data"]
+        except Exception as e:
+            print(f"Error fetching popular shows: {e}")
+            return []
+
+    def fetch_popular_manga_list():
+        try:
+            return mal.get_top_manga(limit=10)
+        except Exception as e:
+            print(f"Error fetching popular manga list: {e}")
+            return []
+
+    
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        season_list_future = executor.submit(fetch_season_list)
+        popular_shows_future = executor.submit(fetch_popular_shows)
+        time.sleep(1) # use sleep for avoiding rate limit error
+        popular_manga_list_future = executor.submit(fetch_popular_manga_list)
+
+        season_list = season_list_future.result()
+        popular_shows = popular_shows_future.result()
+        popular_manga_list = popular_manga_list_future.result()
+
+
+    # season_list_thread = threading.Thread(target=fetch_season_list)
+    # popular_shows_thread = threading.Thread(target=fetch_popular_shows)
+    # popular_manga_list_thread = threading.Thread(target=fetch_popular_manga_list)
+
+    # season_list_thread.start()
+    # popular_shows_thread.start()
+    # time.sleep(3)
+    # popular_manga_list_thread.start()
+    # season_list_thread.join()
+    # popular_shows_thread.join()
+    # popular_manga_list_thread.join()
+
+    print(season_list)
+    print(popular_manga_list)
+    print(popular_shows)
+
+
     print(request.user.is_authenticated)
     return render(request, "info/index.html", {"first_show": season_list[0],
                                                "shows": season_list[1:5],
@@ -307,13 +356,12 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-
 def user_list_helper_func(user_list):
     start = time.time()
     mal = Mal()
     shows = []
     threads = [threading.Thread(target=lambda item=item: shows.append(mal.get_anime_details(item.mal_id, {
-                                    "watching_status": item.list.get(), "episodes_watched": item.episode_watched}))) for item in user_list]
+        "watching_status": item.list.get(), "episodes_watched": item.episode_watched}))) for item in user_list]
     time_interval = 2.3 / 3  # 3 is maximum number of threads executed per 2.3 second
     print(time_interval)
     for thread in threads:

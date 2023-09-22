@@ -89,9 +89,9 @@
               <li>{{related_item.relation|capfirst}}: 
                 {% for item in related_item.entry %}
                   {% if related_item.relation == 'Adaptation' %}
-                    <a href="{% url 'anime-details' item.mal_id %}" style="font-size:small">{{item.name}}</a>
+                    <a href="{% url 'anime-details' item.mal_id %}" style="font-size:smaller">{{item.name}}</a>
                   {% else %}
-                    <a href="{% url 'manga-details' item.mal_id%}" style="font-size:small">{{item.name}}</a>
+                    <a href="{% url 'manga-details' item.mal_id%}" style="font-size:smaller">{{item.name}}</a>
                   {% endif %}
                   
                   {% if related_item.entry|length > 1 %}
@@ -107,12 +107,16 @@
               <li>{{related_item.relation|capfirst}}: 
                 {% for item in related_item.entry %}
                   {% if related_item.relation == 'Adaptation' %}
-                    <a href="{% url 'manga-details' item.mal_id %}">{{item.name}}</a>
+                    <a href="{% url 'manga-details' item.mal_id %}" style="font-size:smaller">{{item.name}}</a>
                   {% else %}
-                    <a href="{% url 'anime-details' item.mal_id%}">{{item.name}}</a>
+                    <a href="{% url 'anime-details' item.mal_id%}" style="font-size:smaller">{{item.name}}</a>
                   {% endif %}
                   
-                  {% if related_item.entry|length > 1 %}<span class="comma">, <span> {% endif %}
+                  {% if related_item.entry|length > 1 %}
+                  {% if forloop.counter != related_item.entry|length %}
+                    <span class="comma">, <span>
+                  {% endif %}
+                  {% endif %}
                   
                 {% endfor %}
               </li>
