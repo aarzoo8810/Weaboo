@@ -314,7 +314,7 @@ def user_list_helper_func(user_list):
     shows = []
     threads = [threading.Thread(target=lambda item=item: shows.append(mal.get_anime_details(item.mal_id, {
                                     "watching_status": item.list.get(), "episodes_watched": item.episode_watched}))) for item in user_list]
-    time_interval = 2.3 / 3  # 3 is maximum number of threads executed per second
+    time_interval = 2.3 / 3  # 3 is maximum number of threads executed per 2.3 second
     print(time_interval)
     for thread in threads:
         thread.start()
