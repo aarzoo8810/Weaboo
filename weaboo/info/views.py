@@ -56,24 +56,6 @@ def index(request):
         popular_shows = popular_shows_future.result()
         popular_manga_list = popular_manga_list_future.result()
 
-
-    # season_list_thread = threading.Thread(target=fetch_season_list)
-    # popular_shows_thread = threading.Thread(target=fetch_popular_shows)
-    # popular_manga_list_thread = threading.Thread(target=fetch_popular_manga_list)
-
-    # season_list_thread.start()
-    # popular_shows_thread.start()
-    # time.sleep(3)
-    # popular_manga_list_thread.start()
-    # season_list_thread.join()
-    # popular_shows_thread.join()
-    # popular_manga_list_thread.join()
-
-    print(season_list)
-    print(popular_manga_list)
-    print(popular_shows)
-
-
     print(request.user.is_authenticated)
     return render(request, "info/index.html", {"first_show": season_list[0],
                                                "shows": season_list[1:5],
