@@ -123,7 +123,9 @@ def anime_detail_view(request, mal_anime_id):
     mal = Mal()
     anime = mal.get_anime_details(mal_anime_id)
     list_types = ListType.objects.all()
-    user = request.user
+    user = None
+    if request.user.is_authenticated:
+        user = request.user
 
     recommendations = mal.get_anime_recommendation(mal_anime_id)
     if len(recommendations) == 0:
